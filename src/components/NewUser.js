@@ -14,13 +14,32 @@ class NewUser extends Component{
     }
     
     // insert addUser
+    addUser() {
+        axios.post('/api/users', this.state).then(results => {
+            console.log(results)
+            let user = results.data
+            this.props.history.push(`/user/${user.id}`)
+        })
+    }
 
 
     // insert updateUser    
-
+    updateUser(){
+        let id = this.props.match.params.id        
+        axios.put(`/api/user/${id}`, this.state).then(results=>{
+            console.log(results)
+            let user = results.data
+            this.props.history.push(`/user/${user.id}`)
+        })
+    }
 
     // insert deleteUser
-
+    deleteUser() {
+        let id = this.props.match.params.id
+        axios.delete(`api/user/${id}`).then(results => {
+            this.props.history.push(`/search`)
+        })
+    }
 
     render(){
         return(
@@ -66,12 +85,12 @@ class NewUser extends Component{
     componentDidMount(){
         let id = this.props.match.params.id
         if(id >= 0){
-             axios.get(`/api/user/${id}`).then(response=>{
+             axios.get(`/api/user/${id}`).then(results=>{
                  this.setState({
                      id: id,
-                     name: response.data.name,
-                     img: response.data.img,
-                     desc: response.data.desc
+                     name: results.data.name,
+                     img: results.data.img,
+                     desc: results.data.desc
                  })
              })
         }
@@ -80,12 +99,12 @@ class NewUser extends Component{
     componentWillReceiveProps(newProps){
         if (newProps.match.params.hasOwnProperty('id')){
             let id = newProps.match.params.id    
-            axios.get(`/api/user/${id}`).then(response=>{
+            axios.get(`/api/user/${id}`).then(results=>{
                 this.setState({
                     id: id,
-                    name: response.data.name,
-                    img: response.data.img,
-                    desc: response.data.desc
+                    name: results.data.name,
+                    img: results.data.img,
+                    desc: results.data.desc
                 })
             })
         } else {
